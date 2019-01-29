@@ -1,253 +1,219 @@
 project_path: /web/tools/_project.yaml
 book_path: /web/tools/_book.yaml
-description: Get started analyzing network performance.
+description: TODO
 
-{# wf_updated_on: 2018-07-27 #}
-{# wf_published_on: 2017-01-17 #}
+{# wf_updated_on: 2019-02-04 #}
+{# wf_published_on: 2019-02-01 #}
 {# wf_blink_components: Platform>DevTools #}
 
-<style>
-.devtools-inline {
-  max-height: 1em;
-  vertical-align: middle;
-}
-figcaption {
-  text-align: center;
-}
-</style>
-
-# Get Started with Analyzing Network Performance in Chrome DevTools {: .page-title }
+# Inspect Network Activity In Chrome DevTools {: .page-title }
 
 {% include "web/_shared/contributors/kaycebasques.html" %}
 
-Note: See [Optimize Website Speed](/web/tools/chrome-devtools/speed/get-started) for a
-comprehensive approach to improving load speed. That tutorial contains the recommended workflow
-for analyzing load performance.
+This hands-on tutorial teaches you how to use Chrome DevTools to inspect a web page's
+network activity.
 
-Learn how to use the Chrome DevTools Network panel to understand why a page
-loads slowly in this step-by-step, interactive tutorial.
+## When to use the Network panel {: #overview }
 
-## Step 1: Set up DevTools {: #set-up }
+In general, use the Network panel when you need to make sure that resources are being
+downloaded or uploaded as expected. The most common use cases for the Network panel are:
 
-Suppose that you're receiving reports from mobile users that a particular page
-on your site is slow. Your job is to make the page fast.
+* Making sure that resources are actually being uploaded or downloaded at all.
+* Inspecting the properties of an individual resource, such as its HTTP headers, content,
+  size, and so on.
 
-1. Click **Open Slow Page**. The page opens in a new tab.
+[speed]: /web/tools/chrome-devtools/speed/get-started
 
-     <a href="https://googlechrome.github.io/devtools-samples/network/gs/v1.html"
-       target="devtools" class="gc-analytics-event" rel="noopener noreferrer"
-       data-category="DevTools / Network / Get Started"
-       data-label="Slow Page Opened">
-       <button>Open Slow Page</button>
-     </a>
+If you're looking for ways to improve page load performance, *don't* start with the Network
+panel. There are many types of load performance issues that aren't related to network
+activity. Start with the Audits panel because it gives you targeted suggestions on how to
+improve your page. See [Optimize Website Speed][speed].
 
-1. While the page is in focus, press
-   <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>I</kbd> (Mac) or
-   <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> (Windows, Linux) to
-   open DevTools on the page.
+## Open the Network panel {: #open }
 
-1. In DevTools, click the **Network** tab.
+This is a hands-on tutorial. You're going to open up DevTools alongside web pages
+in order to gain firsthand experience with the Network panel.
 
-     <figure>
-       <img src="imgs/get-started-network-panel.png"
-         alt="The Chrome DevTools Network panel, opened on the slow
-              page that you're going to diagnose.">
-       <figcaption>
-         <b>Figure 1</b>. The Chrome DevTools Network panel, opened next to
-         the slow page that you're going to diagnose.
-       </figcaption>
-     </figure>
+1. Open the [Get Started Demo](https://devtools.glitch.me/network/basics.html){: .external }.
 
-     <aside class="note">
-       <b>Note:</b> For the rest of the screenshots, DevTools is <a
-       href="/web/tools/chrome-devtools/ui#placement" target="_blank">
-       undocked to a separate window</a>, so that you can see its contents
-       better.
-     </aside>
+     You might prefer to move the demo to a separate window.
 
-1. Enable **Capture Screenshots** ![Capture
-   Screenshots][screenshots]{:.devtools-inline}, which turns blue when enabled.
-   DevTools captures screenshots during the page load.
+1. [Open DevTools](/web/tools/chrome-devtools/open) by pressing
+   <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>J</kbd> or 
+   <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>J</kbd> (Mac). The **Console**
+   panel opens.
+1. Click the **Network** tab. The Network panel opens.
 
-## Step 2: Emulate a mobile user's experience {: #emulate }
+     You might prefer to dock DevTools to the bottom of your window.
 
-Testing network performance on a laptop or desktop can be deceiving. Your
-internet connection is much faster than a mobile user's, and your browser
-caches resources from previous visits.
+Right now the Network panel is empty. That's because DevTools only logs network activity
+while it's open and no network activity has occurred since you opened DevTools.
 
-1. Check the **Disable Cache** checkbox. When this
-   checkbox is enabled, DevTools doesn't serve any resources from the cache.
-   This more accurately emulates what first-time users experience when they
-   view your page.
+## Log network activity {: #load }
 
-1. From the dropdown menu that currently says **No Throttling**, select
-   **Regular 2G**. DevTools throttles the network connection to simulate a
-   regular 2G experience. This is how mobile users experience your site
-   in places with poor connections.
+To view the network activity that a page causes:
 
-<figure>
-  <img src="imgs/get-started-setup.svg"
-    alt="The Chrome DevTools Network panel, after setting up screenshots,
-         cache disabling, and throttling.">
-  <figcaption>
-    <b>Figure 2</b>. The Chrome DevTools Network panel, set up to emulate
-    a mobile user's experience. Screenshots, cache
-    disabling, and throttling are outlined in blue, from left to right,
-    respectively.
-  </figcaption>
-</figure>
+[reload]: /web/tools/chrome-devtools/images/shared/reload.png
 
-This is a worst-case setup. If you can get your page
-loading fast on this setup, it'll be fast for all your users!
+1. Click **Reload** ![Reload][reload]{: .inline-icon }. The Network panel logs all network
+   activity that occurs while the page is loading in the **Network Log**.
 
-[screenshots]: imgs/capture-screenshots.png
+     Each row of the **Network Log** represents a resource.
 
-## Step 3: Analyze requests {: #analyze }
+     By default the resources are listed chronologically. The network activity for the top
+     resource initiated first, and the network activity for the bottom resource initiated last.
 
-Figure out what's making the page slow by reloading the page and analyzing
-the requests that come in.
+     When inspecting page load network activity, the top resource is usually the network request
+     for the main HTML document.
 
-### Part A: Find render-blocking scripts
+1. So long as you've got DevTools open, it will record network activity in the Network Log.
+   To demonstrate this, first look at the bottom of the **Network Log** and make a mental
+   note of the last activity.
+1. Now, click the **Get Data** button in the demo.
+1. Look at the bottom of the **Network Log** again. There's a new resource called
+   `getstarted.json`. Clicking the **Get Data** button caused the page to request this file.
 
-When the browser encounters a `<script>` tag, it must pause rendering and
-execute the script immediately. Find scripts that aren't needed for page load
-and mark them asynchronous or defer their execution to speed up load time.
+## Show more information {: #information }
 
-1. Press <kbd>Command</kbd>+<kbd>R</kbd> (Mac) or
-   <kbd>Control</kbd>+<kbd>R</kbd> (Windows, Linux) to reload the page.
-   On a good Wi-Fi connection, the page takes more than 10 seconds to load
-   completely.
+The columns of the Network Log are configurable. You can hide columns that you're not using.
+There are also many columns that are hidden by default which you may find useful.
 
-     <figure>
-       <img src="imgs/get-started-post-load.png"
-         alt="The Chrome DevTools Network panel, after reloading the page.">
-       <figcaption>
-         <b>Figure 3</b>. The Chrome DevTools Network panel, after reloading
-         the page.
-       </figcaption>
-     </figure>
+1. Right-click the header of the Network Log table and select **Method**. The HTTP request
+   method for each resource is now shown.
 
-1. Note the value for [`DOMContentLoaded`][DOMContentLoaded] in the [Summary
-   pane](reference#summary), on the bottom of the Network panel.
-   You should see a value of at least 4 seconds. When you see this event
-   firing late like this, be on the lookout for scripts that are delaying
-   the main document's load and parse.
+## Simulate a slower network connection {: #throttle }
 
-1. Click **main.js** to investigate that request further. DevTools shows a
-   set of new tabs that provide more information about this request.
+The network connection of the computer that you use to build sites is probably
+faster than the network connections of the mobile devices of your users. By throttling
+the page you can get a better idea of how long a page takes to load on a mobile device.
 
-1. Click the **Preview** tab to view the request's source code. You can
-   see that the script just hangs for 4000ms.
-   By marking this script with the `async` attribute and moving
-   it to the bottom of the document's `<body>`, the page
-   can load without waiting for the script.
+1. Click the **Throttling** dropdown, which is probably set to **Online**.
+1. Select **Slow 3G**.
+1. Long-press **Reload** ![Reload][reload]{: .inline-icon }
+   and then select **Empty Cache And Hard Reload**.
 
-     <figure>
-       <img src="imgs/get-started-preview.png"
-         alt="Viewing the source code for main.js in the Preview pane.">
-       <figcaption>
-         <b>Figure 4</b>. Viewing the source code for <code>main.js</code> in
-         the Preview pane.
-       </figcaption>
-     </figure>
+[cache]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching
 
-See [Parser-blocking versus asynchronous JavaScript][async] to learn more
-about render-blocking scripts.
+     On repeat visits, the browser usually serves some files from its [cache][cache]{: .external },
+     which speeds up the page load. **Empty Cache And Hard Reload** forces the browser to go
+     the network for all resources. This is helpful when you want to see how a first-time
+     visitor experiences a page load.
 
-### Part B: Find large requests
-
-When the page loaded, did you notice that the DevTools logo took a long
-time to load? It's not blocking the load, but it's making the page *appear*
-slow. Users like it when pages *appear* fast.
-
-1. Click **Close** ![Close][close]{:.devtools-inline} so that you can see
-   the [**Requests pane**](reference#requests) again.
-
-1. Double-click on the top-left screenshot.
-
-1. Press your right-arrow key to scan through the set of screenshots. The
-   time below the screenshot indicates when the screenshot was taken. The
-   screenshot takes multiple seconds to load. That means it's probably
-   too large of a file.
-
-1. Click anywhere outside of the screenshot to minimize it.
-
-1. Hover over the [Waterfall](reference#waterfall) for the `logo-1024px.png`
-   request. The request spends most of its time
-   downloading the image. This confirms that the image is too large.
-
-     <figure>
-       <img src="imgs/get-started-waterfall.png"
-         alt="The waterfall for logo-1024px.png.">
-       <figcaption>
-         <b>Figure 5</b>. The waterfall for <code>logo-1024px.png</code>.
-       </figcaption>
-     </figure>
-
-[DOMContentLoaded]: https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded
-
-[async]: /web/fundamentals/performance/critical-rendering-path/adding-interactivity-with-javascript#parser_blocking_versus_asynchronous_javascript
-
-[close]: imgs/close.png 
-
-## Step 4: Verify fixes on updated page {: #verify }
-
-You're just about done. Suppose now that you've already made two changes to
-the page:
-
-* You moved the script to the bottom of the `<body>` and marked it `async`
-  to prevent it from blocking the page load.
-* You converted the logo to SVG to reduce its size.
-
-All that's left to do is to test out the updated page to verify that your
-fixes do indeed make the page load faster.
-
-1. Click **Open Fast Page**. The fixed page opens in a new tab.
-
-     <a href="https://googlechrome.github.io/devtools-samples/network/gs/v2.html"
-       target="devtools" class="gc-analytics-event" rel="noopener noreferrer"
-       data-category="DevTools / Network / Get Started"
-       data-label="Fast Page Opened">
-       <button>Open Fast Page</button>
-     </a>
-
-1. Set up DevTools the same as before. Screenshots and cache disabling should
-   be on, and network throttling should be set to **Regular 2G**.
-1. Reload the page. The page loads much faster.
-
-     <figure>
-       <img src="imgs/get-started-post-fix.png"
-         alt="A recording of the page's load, after applying the fixes.">
-       <figcaption>
-         <b>Figure 6</b>. A recording of the page's load, after applying the
-         fixes. The page used to take about 10 seconds to appear visually
-         complete. Now it only takes about 1 second.
-       </figcaption>
-     </figure>
-
-<aside class="note">
-  <b>Note</b>: Although the page loads much faster, it's still unusable for
-  about 5 seconds. This is because it still runs the script that hangs
-  the main thread of the page.
+<aside class="objective">
+  <b>Tip!</b> See <a href="/web/tools/chrome-devtools/device-mode/">Simulate Mobile Devices
+  With Device Mode</a> to discover other DevTools features related to simulating
+  mobile devices, such as overriding geolocation and simulating device orientations.
 </aside>
 
-## Next Steps {: #next-steps }
+## Inspect a resource's details {: #details }
 
-Good job. You are now a bona fide expert in the Chrome DevTools Network
-panel. Well... maybe not an expert. You do have an excellent foundation
-of skills and knowledge, though.
+To view more information about a particular resource:
 
-* See <a class="gc-analytics-event" data-category="DevTools / Network /
-  Get Started" data-label="Next Steps / CRP"
-  href="/web/fundamentals/performance/critical-rendering-path">Critical
-  Rendering Path</a> to learn more about the theory of lightning-fast page
-  loading.
-* See <a class="gc-analytics-event" data-category="DevTools / Network /
-  Get Started" data-label="Next Steps / Issues Guide" href="issues">Network
-  Issues Guide</a> to learn how to spot more network issues.
-* See <a class="gc-analytics-event" data-category="DevTools / Network /
-  Get Started" data-label="Next Steps / Reference" href="reference">Network
-  Panel Reference</a> for a comprehensive list of Network panel features.
+1. Click `getstarted.html`. The **Headers** tab is shown.
+
+1. Click the **Preview** tab. A basic rendering of the HTML is shown.
+
+     This tab is helpful when an API returns an error code in HTML and it's easier to read
+     the rendered HTML than the HTML source code, or when inspecting images.
+
+1. Click the **Response** tab. The HTML source code is shown.
+
+1. Click the **Timing** tab. A breakdown of the network activity for this resource is shown.
+
+## Search network headers and responses {: #search }
+
+Use the **Search** pane when you need to search the HTTP headers and responses of all resources
+for a certain string or regular expression.
+
+[policies]: /web/tools/lighthouse/audits/cache-policy
+
+For example, suppose you want to check if your resources are using reasonable [cache
+policies][policies].
+
+[search]: /web/tools/chrome-devtools/images/shared/search.png
+
+1. Click **Search** ![Search][search]{: .inline-icon }. The Search pane opens to the left
+   of the Network log.
+
+1. Type `Cache-Control` and press <kbd>Enter</kbd>. The Search pane lists all instances of
+   `Cache-Control` that it finds in resource headers or responses.
+
+## Filter resources {: #filter }
+
+DevTools provides numerous workflows for filtering out irrelevant resources.
+
+To enable filters:
+
+[filter]: /web/tools/chrome-devtools/images/shared/filter.png
+
+1. Click **Filter** ![Filter][filter]{: .inline-icon }. The Filters pane opens below the
+   Toolbar.
+
+### Filter by resource type {: #type }
+
+Hold Command and click to select multiple.
+
+## Block requests {: #block }
+
+1. Press <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> or
+   <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> (Mac) to open the **Command Menu**.
+1. Type `block`, select **Show Request Blocking**, and press <kbd>Enter</kbd>.
+
+[add]: /web/tools/chrome-devtools/images/shared/add.png
+
+1. Click **Add Pattern** ![Add Pattern][add]{: .inline-icon }.
+1. Type `main.css`.
+1. Click **Add**.
+1. Reload the page. The page's styling is messed up because its stylesheet has been blocked.
+
+     Note the `main.css` row in the Network Log. The red text means that the resource was blocked.
+
+## Next steps {: #next-steps }
+
+Check out the [Network Reference](/web/tools/chrome-devtools/network-performance/reference)
+to discover more DevTools features related to inspecting network activity.
+
+## Test your knowledge {: #test }
+
+Answer the questions below to reinforce the knowledge and skills that you learned throughout
+this tutorial.
+
+<div class="devsite-tracking-question">
+  <div>
+    When figuring out how to improve load performance, the Network panel is the best place
+    to start.
+  </div>
+  <div class="gc-analytics-event"
+       data-category="TODO" data-value="1"
+       data-label="TODO">
+    <div>True</div>
+    <div>TODO</div>
+  </div>
+  <div class="gc-analytics-event"
+       data-category="TODO" data-value="0"
+       data-label="TODO">
+    <div>False</div>
+    <div>TODO</div>
+  </div>
+</div>
+
+<div class="devsite-tracking-question">
+  <div>
+    Sometimes the Network panel is empty. Why is that?
+  </div>
+  <div class="gc-analytics-event"
+       data-category="TODO" data-value="1"
+       data-label="TODO">
+    <div>Because DevTools only logs network activity when it's open.</div>
+    <div>Correct.</div>
+  </div>
+  <div class="gc-analytics-event"
+       data-category="TODO" data-value="0"
+       data-label="TODO">
+    <div>Because something is broken.</div>
+    <div>Incorrect. Please try again.</div>
+  </div>
+</div>
 
 ## Feedback {: #feedback }
 
