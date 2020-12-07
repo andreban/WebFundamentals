@@ -41,8 +41,8 @@ You will also need to add an implementation declaration for the billing extensio
 ```groovy
 dependencies {
     ...
-    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0-alpha02'
-    implementation 'com.google.androidbrowserhelper:billing:1.0.0-alpha04'
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0'
+    implementation 'com.google.androidbrowserhelper:billing:1.0.0-alpha05'
 }
 ```
 
